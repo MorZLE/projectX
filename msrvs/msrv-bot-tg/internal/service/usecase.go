@@ -10,7 +10,7 @@ type IService interface {
 	Get()
 }
 
-func InitRestApi(cnf *config.Config, db *repository.IRepository) IService {
+func InitService(cnf *config.Config, db *repository.IRepository) IService {
 	return &service{}
 }
 

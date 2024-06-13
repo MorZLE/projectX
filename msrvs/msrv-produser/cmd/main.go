@@ -1,8 +1,10 @@
 package main
 
 import (
+	"log/slog"
 	"projectX/msrvs/msrv-produser/config"
 	"projectX/msrvs/msrv-produser/internal/api"
+	"projectX/msrvs/msrv-produser/internal/broker"
 	"projectX/msrvs/msrv-produser/internal/repository"
 	"projectX/msrvs/msrv-produser/internal/service"
 )
@@ -12,10 +14,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	slog.Info("load config success")
 
-	rep := repository.InitRestApi(cnf)
-	srv := service.InitRestApi(cnf, &rep)
-	app := api.InitRestApi(cnf, &srv)
+	rep := repository.InitRepository(cnf)
+	br := broker.InitBroker(cnf.BrokerHost)
+	defer br.Close()
 
-	go app.Start("")
+	srv := service.InitService(rep, br)
+	app := api.InitRestApi(srv)
+
+	app.Start(cnf.RestHost)
 }

@@ -13,9 +13,10 @@ func main() {
 		panic(err)
 	}
 
-	rep := repository.InitRestApi(cnf)
-	srv := service.InitRestApi(cnf, &rep)
-	app := api.InitRestApi(cnf, &srv)
+	rep := repository.InitRepository(cnf)
+	srv := service.InitService(cnf, &rep)
+	br := api.InitBroker(cnf.BrokerHost, srv)
+	defer br.Close()
+	br.Get()
 
-	go app.Start("")
 }

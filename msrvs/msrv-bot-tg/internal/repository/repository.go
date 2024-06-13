@@ -7,7 +7,7 @@ type IRepository interface {
 	Get()
 }
 
-func InitRestApi(cnf *config.Config) IRepository {
+func InitRepository(cnf *config.Config) IRepository {
 	return &mongoDB{}
 }
 

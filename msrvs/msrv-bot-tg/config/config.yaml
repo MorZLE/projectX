@@ -1,0 +1,2 @@
+BrokerHost:
+  "amqp://rmuser:rmpassword@localhost:5672/"

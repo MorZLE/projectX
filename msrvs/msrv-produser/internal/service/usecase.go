@@ -1,26 +1,40 @@
 package service
 
 import (
-	"projectX/msrvs/msrv-produser/config"
+	"context"
+	"projectX/msrvs/msrv-produser/internal/broker"
 	"projectX/msrvs/msrv-produser/internal/repository"
+	"projectX/pkg/cerrors"
+	"projectX/pkg/model"
 )
 
 type IService interface {
-	Set()
+	Set(ctx *context.Context, req *model.UserReq) error
 	Get()
 }
 
-func InitRestApi(cnf *config.Config, db *repository.IRepository) IService {
-	return &service{}
+func InitService(db repository.IRepository, br broker.IBroker) IService {
+	return &Service{
+		db: db,
+		br: br,
+	}
 }
 
-type service struct {
+type Service struct {
+	db repository.IRepository
+	br broker.IBroker
 }
 
-func (h *service) Set() {
-
+func (h *Service) Set(ctx *context.Context, req *model.UserReq) error {
+	if req.Username == "" {
+		return cerrors.ErrUserNil
+	}
+	if req.Body == "" {
+		return cerrors.ErrBodyNil
+	}
+	return h.br.Send(ctx, "test", req.Body)
 }
 
-func (h *service) Get() {
+func (h *Service) Get() {
 
 }
