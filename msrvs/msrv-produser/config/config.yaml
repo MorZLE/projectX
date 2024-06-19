@@ -1,0 +1,4 @@
+BrokerHost:
+  "amqp://rmuser:rmpassword@localhost:5672/"
+RestHost:
+  ":8080"

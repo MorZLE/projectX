@@ -1,0 +1,8 @@
+POST localhost:8080/send
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Username": "artem",
+  "Body": "text"
+}
