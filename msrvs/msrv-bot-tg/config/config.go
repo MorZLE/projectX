@@ -2,6 +2,7 @@ package config
 
 import (
 	"gopkg.in/yaml.v3"
+	"log"
 	"os"
 )
 
@@ -25,5 +26,13 @@ func parseConfig() (*Config, error) {
 		return nil, err
 	}
 
+	if os.Getenv("RABBITMQ_HOST") != "" {
+		cnf.BrokerHost = os.Getenv("RABBITMQ_HOST")
+	}
+
+	if cnf.BrokerHost == "" {
+		log.Fatalf("BrokerHost is empty")
+		//cnf.BrokerHost = "amqp://rmuser:rmpassword@localhost:5672/"
+	}
 	return &cnf, nil
 }

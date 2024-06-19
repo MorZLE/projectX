@@ -1,11 +1,12 @@
 package api
 
 import (
+	"context"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 	"log/slog"
-	"os"
 	"projectX/msrvs/msrv-bot-tg/internal/service"
+	"time"
 )
 
 type IBroker interface {
@@ -14,16 +15,27 @@ type IBroker interface {
 }
 
 func InitBroker(addr string, service service.IService) IBroker {
-	conn, err := amqp.Dial(addr)
-	if err != nil {
-		slog.Error("Failed to connect to RabbitMQ", err)
-		os.Exit(1)
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(10*time.Second))
+	for {
+		select {
+		case <-ctx.Done():
+			log.Fatalf("Failed to connect to RabbitMQ")
+			return nil
+		default:
+			conn, err := amqp.Dial(addr)
+			if err == nil {
+				slog.Info("RabbitMQ connected")
+				ch, err1 := conn.Channel()
+				failOnError(err1, "Failed to open a channel")
+				cancel()
+
+				return &RabbitMQ{conn: conn, ch: ch, srv: service}
+			}
+
+			slog.Error("Failed to connect to RabbitMQ", err)
+			time.Sleep(2 * time.Second)
+		}
 	}
-
-	ch, err1 := conn.Channel()
-	failOnError(err1, "Failed to open a channel")
-
-	return &RabbitMQ{conn: conn, ch: ch, srv: service}
 }
 
 type RabbitMQ struct {
