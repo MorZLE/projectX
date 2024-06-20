@@ -4,5 +4,5 @@ Content-Type: application/json
 
 {
   "Username": "zl_kka",
-  "Body": "text pmawpod aw"
+  "Body": "егор не самый крутой"
 }
