@@ -1,7 +1,6 @@
 package config
 
 import (
-	"gopkg.in/yaml.v3"
 	"log"
 	"os"
 )
@@ -11,36 +10,42 @@ func InitConfig() (*Config, error) {
 }
 
 type Config struct {
-	RestHost   string `yaml:"RestHost"`
-	BrokerHost string `yaml:"BrokerHost"`
+	Rest   Rest   `yaml:"Rest"`
+	Broker Broker `yaml:"Broker"`
+}
+
+type Broker struct {
+	Host string `yaml:"host" env:"RABBITMQ_HOST"`
+}
+type Rest struct {
+	Host string `yaml:"host" env:"REST_HOST"`
 }
 
 func parseConfig() (*Config, error) {
-	cnfFile, err := os.ReadFile("msrvs/msrv-produser/config/config.yaml") //TODO сделать кросс
-	if err != nil {
-		return nil, err
-	}
-
 	var cnf Config
-	err = yaml.Unmarshal(cnfFile, &cnf)
-	if err != nil {
-		return nil, err
-	}
 
-	if os.Getenv("PORT") != "" {
-		cnf.RestHost = ":" + os.Getenv("PORT")
-	}
-	if os.Getenv("RABBITMQ_HOST") != "" {
-		cnf.BrokerHost = os.Getenv("RABBITMQ_HOST")
-	}
-
-	if cnf.RestHost == "" {
-		cnf.RestHost = ":8080"
-	}
-	if cnf.BrokerHost == "" {
-		log.Fatalf("BrokerHost is empty")
-		//cnf.BrokerHost = "amqp://rmuser:rmpassword@localhost:5672/"
-	}
+	cnf.parseEnv()
+	cnf.checkEmpty()
 
 	return &cnf, nil
+}
+
+func (c *Config) parseEnv() {
+	if os.Getenv("RABBITMQ_HOST") != "" {
+		c.Broker.Host = os.Getenv("RABBITMQ_HOST")
+	}
+
+	if os.Getenv("REST_HOST") != "" {
+		c.Rest.Host = os.Getenv("REST_HOST")
+	}
+}
+
+func (c *Config) checkEmpty() {
+	if c.Broker.Host == "" {
+		log.Fatalf("BrokerHost is empty")
+	}
+
+	if c.Rest.Host == "" {
+		c.Rest.Host = ":8080"
+	}
 }

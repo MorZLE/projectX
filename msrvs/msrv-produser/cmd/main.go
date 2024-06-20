@@ -17,11 +17,11 @@ func main() {
 	slog.Info("load config success")
 
 	rep := repository.InitRepository(cnf)
-	br := broker.InitBroker(cnf.BrokerHost)
+	br := broker.InitBroker(cnf.Broker.Host)
 	defer br.Close()
 
 	srv := service.InitService(rep, br)
 	app := api.InitRestApi(srv)
 
-	app.Start(cnf.RestHost)
+	app.Start(cnf.Rest.Host)
 }

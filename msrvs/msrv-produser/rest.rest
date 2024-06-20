@@ -3,6 +3,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "Username": "artem",
-  "Body": "text"
+  "Username": "zl_kka",
+  "Body": "text pmawpod aw"
 }

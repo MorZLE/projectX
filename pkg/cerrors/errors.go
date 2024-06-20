@@ -7,4 +7,5 @@ var (
 	ErrBodyNil = errors.New("error body is Nil")
 
 	ErrUnmarshalData = errors.New("error decode data")
+	ErrMemoryEmpty   = errors.New("error memory empty")
 )

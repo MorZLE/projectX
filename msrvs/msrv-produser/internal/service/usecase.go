@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"projectX/msrvs/msrv-produser/internal/broker"
 	"projectX/msrvs/msrv-produser/internal/repository"
 	"projectX/pkg/cerrors"
@@ -32,7 +33,22 @@ func (h *Service) Set(ctx *context.Context, req *model.UserReq) error {
 	if req.Body == "" {
 		return cerrors.ErrBodyNil
 	}
-	return h.br.Send(ctx, "test", req.Body)
+
+	var msg model.Message
+	msg.Topic = "user"
+	msg.Body = req.Body
+	msg.Group = req.Username
+	msg.Status = "sent"
+
+	body, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+	err = h.br.Send(ctx, "event", body)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (h *Service) Get() {

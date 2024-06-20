@@ -1,2 +1,6 @@
-BrokerHost:
-  "amqp://rmuser:rmpassword@localhost:5672/"
+Dev: "docker"
+Broker:
+  host: "amqp://rmuser:rmpassword@localhost:5672/"
+Bot:
+  token: 7470072650:AAHn1EdbvNK6cYAkGLY7-bTQGCpkfllhOQo
+  admins: [zl_kka]
