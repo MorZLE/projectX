@@ -70,7 +70,7 @@ func (r *RabbitMQ) WatchEvents() {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
-			r.srv.Set(context.Background(), d.Body)
+			r.srv.SetEvent(context.Background(), d.Body)
 		}
 	}()
 

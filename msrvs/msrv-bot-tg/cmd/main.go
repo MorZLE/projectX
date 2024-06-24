@@ -7,7 +7,8 @@ import (
 	"projectX/msrvs/msrv-bot-tg/config"
 	"projectX/msrvs/msrv-bot-tg/internal/api"
 	"projectX/msrvs/msrv-bot-tg/internal/bot"
-	"projectX/msrvs/msrv-bot-tg/internal/repository"
+	"projectX/msrvs/msrv-bot-tg/internal/repository/postgres"
+	stack2 "projectX/msrvs/msrv-bot-tg/internal/repository/stack"
 	"projectX/msrvs/msrv-bot-tg/internal/service"
 	"syscall"
 )
@@ -18,8 +19,9 @@ func main() {
 		panic(err)
 	}
 
-	rep := repository.InitRepository(cnf)
-	srv := service.InitService(cnf, rep)
+	rep := postgres.InitRepository(cnf)
+	stack := stack2.InitCache()
+	srv := service.InitService(cnf, stack, rep)
 	br := api.InitBroker(cnf.Broker.Host, srv)
 	defer br.Close()
 

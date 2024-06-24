@@ -33,7 +33,7 @@ func (w *Watcher) WatcherEvent(ctx context.Context, out chan<- model.Message) {
 		case <-ctx.Done():
 			return
 		default:
-			msg := w.srv.Get(ctx)
+			msg := w.srv.GetEvent(ctx)
 			if msg.Error != nil {
 				if errors.Is(msg.Error, cerrors.ErrMemoryEmpty) {
 					continue

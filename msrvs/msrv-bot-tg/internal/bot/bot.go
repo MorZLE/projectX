@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"context"
 	"fmt"
 	bot "gopkg.in/telebot.v3"
 	"log/slog"
@@ -17,31 +18,45 @@ func (r *MyRecipient) Recipient() string {
 
 func (h *Bot) SendEvent(msg model.Message) {
 	const op = "bot.SendEvent"
-
 	if msg.Error != nil {
 		return
 	}
-	id := h.getRecipient(msg.Group)
-	_, err := h.bot.Send(&MyRecipient{user: id}, msg.Body)
+
+	users, err := h.srv.GetUsersByGroup(context.Background(), msg.Group)
 	if err != nil {
 		slog.Error("error send", err, op)
+		return
+	}
+	h.send(msg, users)
+
+	slog.Info("msg not found group", msg, op)
+}
+
+func (h *Bot) send(msg model.Message, users []int64) {
+	const op = "bot.SendEvent"
+	if msg.Error != nil {
+		return
+	}
+	for i := 0; i < len(users); i++ {
+		_, err := h.bot.Send(&MyRecipient{user: users[i]}, msg.Body)
+		if err != nil {
+			slog.Error("error send", err, op)
+		}
 	}
 }
 
 func (h *Bot) HStart(c bot.Context) error {
 	const op = "bot.HStart"
-	h.addRecipient(c)
 	h.bot.Send(c.Chat(), "Привет")
 	return nil
 }
 
-func (h *Bot) addRecipient(c bot.Context) {
-	id := c.Chat().ID
-	user := c.Sender().Username
-	h.userToChat[user] = id
-
-}
-
-func (h *Bot) getRecipient(user string) (id int64) {
-	return h.userToChat[user]
+func (h *Bot) HSubscribe(c bot.Context) error {
+	const op = "bot.Subscribe"
+	err := h.srv.AddUser(context.Background(), c.Sender().Username, c.Chat().ID)
+	if err != nil {
+		return err
+	}
+	h.bot.Send(c.Chat(), "Вы подписались на обновление")
+	return nil
 }

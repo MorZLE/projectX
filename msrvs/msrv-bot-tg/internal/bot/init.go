@@ -26,14 +26,13 @@ func InitBot(cnf *config.Config, srv *service.IService) (IBot, error) {
 		return nil, err
 	}
 
-	return &Bot{bot: b, srv: srv, watcher: worker.InitWatcher(srv), userToChat: make(map[string]int64)}, nil
+	return &Bot{bot: b, srv: *srv, watcher: worker.InitWatcher(srv)}, nil
 }
 
 type Bot struct {
-	bot        *bot.Bot
-	watcher    worker.IWatcher
-	srv        *service.IService
-	userToChat map[string]int64
+	bot     *bot.Bot
+	watcher worker.IWatcher
+	srv     service.IService
 }
 
 func (h *Bot) Start(ctx context.Context) {
@@ -63,4 +62,5 @@ func (h *Bot) Start(ctx context.Context) {
 
 func (h *Bot) initHandler() {
 	h.bot.Handle("/start", h.HStart)
+	h.bot.Handle("/subscribe", h.HSubscribe)
 }

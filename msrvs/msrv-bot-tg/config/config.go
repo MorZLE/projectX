@@ -16,6 +16,7 @@ type Config struct {
 	dev    string `yaml:"Dev"`
 	Broker Broker `yaml:"Broker"`
 	Bot    Bot    `yaml:"Bot"`
+	DB     DB     `yaml:"DB"`
 }
 type Broker struct {
 	Host string `yaml:"host" env:"RABBITMQ_HOST"`
@@ -25,6 +26,10 @@ type Bot struct {
 	Token      string   `yaml:"token" env:"BOT_TOKEN"`
 	TimeUpdate int      `yaml:"timeUpdate" env:"BOT_TIME_UPDATE"`
 	Admins     []string `yaml:"admins" env:"BOT_ADMINS"`
+}
+
+type DB struct {
+	Dsn string `yaml:"dsn" env:"DB_DSN"`
 }
 
 func parseConfig() (*Config, error) {
@@ -45,6 +50,7 @@ func parseConfig() (*Config, error) {
 func (c *Config) parseEnv() {
 	c.Broker.Host = os.Getenv("RABBITMQ_HOST")
 	c.Bot.Token = os.Getenv("BOT_TOKEN")
+	c.DB.Dsn = os.Getenv("DB_DSN")
 
 	if os.Getenv("BOT_TIME_UPDATE") != "" {
 		n, err := strconv.Atoi(os.Getenv("BOT_TIME_UPDATE"))
@@ -69,5 +75,8 @@ func (c *Config) checkEmpty() {
 
 	if len(c.Bot.Admins) == 0 {
 		log.Fatalf("Admins is empty")
+	}
+	if c.DB.Dsn == "" {
+		log.Fatalf("DB_DSN is empty")
 	}
 }

@@ -1,21 +1,19 @@
-package repository
+package stack
 
 import (
 	"context"
-	"projectX/msrvs/msrv-bot-tg/config"
 	"projectX/pkg/cerrors"
 	"projectX/pkg/model"
 	"sync"
 )
 
-type IRepository interface {
+type IStackEvent interface {
 	Set(ctx context.Context, msg model.Message)
 	Get() (msg model.Message, err error)
 }
 
-func InitRepository(cnf *config.Config) IRepository {
-
-	return &Cache{memory: []model.Message{}}
+func InitCache() IStackEvent {
+	return &Cache{memory: make([]model.Message, 0)}
 }
 
 type Cache struct {

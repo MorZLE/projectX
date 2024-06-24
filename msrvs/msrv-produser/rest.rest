@@ -3,6 +3,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "Username": "zl_kka",
-  "Body": "егор не самый крутой"
+  "Username": "all",
+  "Body": "всм внимание"
 }
