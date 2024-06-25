@@ -25,10 +25,15 @@ type IService interface {
 }
 
 func InitService(cnf *config.Config, stack stack.IStackEvent, db postgres.IRepository) IService {
-	return &service{db: db, stack: stack}
+	hiAdmin := make(map[string]struct{})
+	for i := 0; i < len(cnf.Bot.Admins); i++ {
+		hiAdmin[cnf.Bot.Admins[i]] = struct{}{}
+	}
+	return &service{db: db, stack: stack, hiAdmin: hiAdmin}
 }
 
 type service struct {
-	db    postgres.IRepository
-	stack stack.IStackEvent
+	db      postgres.IRepository
+	stack   stack.IStackEvent
+	hiAdmin map[string]struct{}
 }

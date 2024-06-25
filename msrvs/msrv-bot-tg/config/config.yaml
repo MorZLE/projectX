@@ -1,8 +1,8 @@
-Dev: "docker"
+Dev: "dockr"
 Broker:
   host: "amqp://rmuser:rmpassword@localhost:5672/"
 Bot:
-  token: 7470072650:AAHn1EdbvNK6cYAkGLY7-bTQGCpkfllhOQo
-  admins: [zl_kka]
+  token: "7470072650:AAHn1EdbvNK6cYAkGLY7-bTQGCpkfllhOQo"
+  admins: ["zl_kka"]
 DB:
-  dsn: "host=localhost user=postgres password=postgres dbname=msrv-bot-tg port=5432 sslmode=disable"
+  dsn: "host=localhost user=postgres password=postgres dbname=msrv-bot-tg port=5430 sslmode=disable"

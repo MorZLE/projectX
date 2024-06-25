@@ -34,10 +34,12 @@ type DB struct {
 
 func parseConfig() (*Config, error) {
 	var cnf Config
-	cnfFile, err := os.ReadFile("msrvs/msrv-bot-tg/config/config.yaml")
-	if err == nil {
+	cnfFile, err := os.ReadFile("D:\\projectX\\msrvs\\msrv-bot-tg\\config\\config.yaml")
+	if err != nil {
+		cnf.parseEnv()
+	} else {
 		err = yaml.Unmarshal(cnfFile, &cnf)
-		if err != nil || cnf.dev != "docker" {
+		if err != nil || cnf.dev == "docker" {
 			cnf.parseEnv()
 		}
 	}

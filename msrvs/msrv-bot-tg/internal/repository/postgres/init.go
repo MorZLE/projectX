@@ -7,16 +7,6 @@ import (
 	"projectX/msrvs/msrv-bot-tg/config"
 )
 
-const (
-	createUsers = "CREATE TABLE IF NOT EXISTS users (" +
-		"\n    id SERIAL PRIMARY KEY," +
-		"\n    name VARCHAR(255) NOT NULL," +
-		"\n    chat_id integer NOT NULL," +
-		"\n    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-		"\n    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP\n    " +
-		");"
-)
-
 var ErrNoRows = sql.ErrNoRows
 
 func InitRepository(cnf *config.Config) IRepository {
@@ -31,17 +21,14 @@ func InitRepository(cnf *config.Config) IRepository {
 		panic(err)
 	}
 
-	_, err = db.Exec(createUsers)
-	if err != nil {
-		panic(err)
-	}
 	return &PostgresDB{db: db}
 }
 
 type IRepository interface {
-	AddUser(ctx context.Context, user string, chatID int64) error
+	AddUser(ctx context.Context, user string, chatID int64, group string) error
 	GetUser(ctx context.Context, user string) (chatID int64, err error)
 	GetAllUsers(ctx context.Context) ([]int64, error)
+	GetUserByGroup(ctx context.Context, group string) ([]int64, error)
 }
 
 type PostgresDB struct {

@@ -5,8 +5,8 @@ import (
 	"os"
 	"os/signal"
 	"projectX/msrvs/msrv-bot-tg/config"
-	"projectX/msrvs/msrv-bot-tg/internal/api"
-	"projectX/msrvs/msrv-bot-tg/internal/bot"
+	"projectX/msrvs/msrv-bot-tg/internal/api/bot"
+	"projectX/msrvs/msrv-bot-tg/internal/api/broker"
 	"projectX/msrvs/msrv-bot-tg/internal/repository/postgres"
 	stack2 "projectX/msrvs/msrv-bot-tg/internal/repository/stack"
 	"projectX/msrvs/msrv-bot-tg/internal/service"
@@ -22,7 +22,7 @@ func main() {
 	rep := postgres.InitRepository(cnf)
 	stack := stack2.InitCache()
 	srv := service.InitService(cnf, stack, rep)
-	br := api.InitBroker(cnf.Broker.Host, srv)
+	br := broker.InitBroker(cnf.Broker.Host, srv)
 	defer br.Close()
 
 	iBot, err1 := bot.InitBot(cnf, &srv)

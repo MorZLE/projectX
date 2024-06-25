@@ -28,8 +28,6 @@ func (h *Bot) SendEvent(msg model.Message) {
 		return
 	}
 	h.send(msg, users)
-
-	slog.Info("msg not found group", msg, op)
 }
 
 func (h *Bot) send(msg model.Message, users []int64) {
