@@ -8,6 +8,7 @@ import (
 	"projectX/msrvs/msrv-bot-tg/internal/api/bot"
 	"projectX/msrvs/msrv-bot-tg/internal/api/broker"
 	"projectX/msrvs/msrv-bot-tg/internal/repository/postgres"
+	"projectX/msrvs/msrv-bot-tg/internal/repository/redis"
 	stack2 "projectX/msrvs/msrv-bot-tg/internal/repository/stack"
 	"projectX/msrvs/msrv-bot-tg/internal/service"
 	"syscall"
@@ -20,7 +21,14 @@ func main() {
 	}
 
 	rep := postgres.InitRepository(cnf)
-	stack := stack2.InitCache()
+
+	var stack stack2.IStackEvent
+	if cnf.Redis.Dsn != "" {
+		stack = redis.InitRedis(cnf.Redis)
+
+	} else {
+		stack = stack2.InitCache()
+	}
 	srv := service.InitService(cnf, stack, rep)
 	br := broker.InitBroker(cnf.Broker.Host, srv)
 	defer br.Close()

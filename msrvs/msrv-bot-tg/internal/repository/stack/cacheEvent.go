@@ -2,6 +2,7 @@ package stack
 
 import (
 	"context"
+	"log/slog"
 	"projectX/pkg/cerrors"
 	"projectX/pkg/model"
 	"sync"
@@ -13,6 +14,7 @@ type IStackEvent interface {
 }
 
 func InitCache() IStackEvent {
+	slog.Info("init memoryCache")
 	return &Cache{memory: make([]model.Message, 0)}
 }
 

@@ -17,9 +17,14 @@ type Config struct {
 	Broker Broker `yaml:"Broker"`
 	Bot    Bot    `yaml:"Bot"`
 	DB     DB     `yaml:"DB"`
+	Redis  Redis  `yaml:"Redis"`
 }
 type Broker struct {
 	Host string `yaml:"host" env:"RABBITMQ_HOST"`
+}
+
+type Redis struct {
+	Dsn string `yaml:"dsn" env:"REDIS_DSN"`
 }
 
 type Bot struct {
@@ -53,6 +58,7 @@ func (c *Config) parseEnv() {
 	c.Broker.Host = os.Getenv("RABBITMQ_HOST")
 	c.Bot.Token = os.Getenv("BOT_TOKEN")
 	c.DB.Dsn = os.Getenv("DB_DSN")
+	c.Redis.Dsn = os.Getenv("REDIS_DSN")
 
 	if os.Getenv("BOT_TIME_UPDATE") != "" {
 		n, err := strconv.Atoi(os.Getenv("BOT_TIME_UPDATE"))

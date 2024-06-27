@@ -6,3 +6,5 @@ Bot:
   admins: ["zl_kka"]
 DB:
   dsn: "host=localhost user=postgres password=postgres dbname=msrv-bot-tg port=5430 sslmode=disable"
+Redis:
+  dsn: "redis://admin:pass@localhost:6380/0"
