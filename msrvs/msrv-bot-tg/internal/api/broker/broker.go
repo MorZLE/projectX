@@ -1,4 +1,4 @@
-package api
+package broker
 
 import (
 	"context"
@@ -10,11 +10,11 @@ import (
 )
 
 type IBroker interface {
-	Get()
+	WatchEvents()
 	Close()
 }
 
-func InitBroker(addr string, service service.IService) IBroker {
+func InitBroker(addr string, service service.IServiceSet) IBroker {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(10*time.Second))
 	for {
 		select {
@@ -41,17 +41,17 @@ func InitBroker(addr string, service service.IService) IBroker {
 type RabbitMQ struct {
 	conn *amqp.Connection
 	ch   *amqp.Channel
-	srv  service.IService
+	srv  service.IServiceSet
 }
 
-func (r *RabbitMQ) Get() {
+func (r *RabbitMQ) WatchEvents() {
 	q, err := r.ch.QueueDeclare(
-		"test", // name
-		false,  // durable
-		false,  // delete when unused
-		false,  // exclusive
-		false,  // no-wait
-		nil,    // arguments
+		"event", // name
+		false,   // durable
+		false,   // delete when unused
+		false,   // exclusive
+		false,   // no-wait
+		nil,     // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 	msgs, err := r.ch.Consume(
@@ -70,16 +70,17 @@ func (r *RabbitMQ) Get() {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+			r.srv.SetEvent(context.Background(), d.Body)
 		}
 	}()
 
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+	log.Printf(" [*] Waiting for messages")
 	<-forever
 }
 
 func (r *RabbitMQ) Close() {
-	r.conn.Close()
-	r.ch.Close()
+	failOnError(r.conn.Close(), "Failed to close connection broker")
+	failOnError(r.ch.Close(), "Failed to close channel broker")
 }
 
 func failOnError(err error, msg string) {

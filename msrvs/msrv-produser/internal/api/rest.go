@@ -8,8 +8,8 @@ import (
 	"log/slog"
 	"net/http"
 	"projectX/msrvs/msrv-produser/internal/service"
-	"projectX/pkg/cerrors"
-	"projectX/pkg/model"
+	"projectX/msrvs/pkg/cerrors"
+	"projectX/msrvs/pkg/model"
 	"time"
 )
 

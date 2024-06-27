@@ -1,2 +1,11 @@
-BrokerHost:
-  "amqp://rmuser:rmpassword@localhost:5672/"
+Dev: "dockr"
+Broker:
+  host: "amqp://rmuser:rmpassword@localhost:5672/"
+Bot:
+  token: "7470072650:AAHn1EdbvNK6cYAkGLY7-bTQGCpkfllhOQo"
+  admins: ["zl_kka"]
+DB:
+  dsn: "host=localhost user=postgres password=postgres dbname=msrv-bot-tg port=5430 sslmode=disable"
+Redis:
+  work: true
+  dsn: "redis://admin:pass@localhost:6380/0"
