@@ -4,8 +4,7 @@ import (
 	"context"
 	"projectX/msrvs/msrv-bot-tg/config"
 	"projectX/msrvs/msrv-bot-tg/internal/repository/postgres"
-	"projectX/msrvs/msrv-bot-tg/internal/repository/stack"
-	"projectX/pkg/model"
+	"projectX/msrvs/pkg/model"
 )
 
 type IServiceGet interface {
@@ -24,7 +23,7 @@ type IService interface {
 	IServiceSet
 }
 
-func InitService(cnf *config.Config, stack stack.IStackEvent, db postgres.IRepository) IService {
+func InitService(cnf *config.Config, stack memorySlice.IStackEvent, db postgres.IRepository) IService {
 	hiAdmin := make(map[string]struct{})
 	for i := 0; i < len(cnf.Bot.Admins); i++ {
 		hiAdmin[cnf.Bot.Admins[i]] = struct{}{}
@@ -34,6 +33,6 @@ func InitService(cnf *config.Config, stack stack.IStackEvent, db postgres.IRepos
 
 type service struct {
 	db      postgres.IRepository
-	stack   stack.IStackEvent
+	stack   memorySlice.IStackEvent
 	hiAdmin map[string]struct{}
 }

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	bot "gopkg.in/telebot.v3"
 	"log/slog"
-	"projectX/pkg/model"
+	"projectX/msrvs/pkg/model"
 )
 
 type MyRecipient struct {

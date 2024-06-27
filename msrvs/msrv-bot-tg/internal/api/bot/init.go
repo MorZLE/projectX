@@ -7,7 +7,7 @@ import (
 	"projectX/msrvs/msrv-bot-tg/config"
 	"projectX/msrvs/msrv-bot-tg/internal/service"
 	"projectX/msrvs/msrv-bot-tg/internal/worker"
-	"projectX/pkg/model"
+	"projectX/msrvs/pkg/model"
 	"time"
 )
 

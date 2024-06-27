@@ -24,7 +24,8 @@ type Broker struct {
 }
 
 type Redis struct {
-	Dsn string `yaml:"dsn" env:"REDIS_DSN"`
+	Dsn  string `yaml:"dsn" env:"REDIS_DSN"`
+	Work bool   `yaml:"work" env:"REDIS_WORK"`
 }
 
 type Bot struct {
@@ -59,6 +60,7 @@ func (c *Config) parseEnv() {
 	c.Bot.Token = os.Getenv("BOT_TOKEN")
 	c.DB.Dsn = os.Getenv("DB_DSN")
 	c.Redis.Dsn = os.Getenv("REDIS_DSN")
+	c.Redis.Work = os.Getenv("REDIS_WORK") == "true"
 
 	if os.Getenv("BOT_TIME_UPDATE") != "" {
 		n, err := strconv.Atoi(os.Getenv("BOT_TIME_UPDATE"))

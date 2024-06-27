@@ -5,8 +5,8 @@ import (
 	"errors"
 	"log/slog"
 	"projectX/msrvs/msrv-bot-tg/internal/service"
-	"projectX/pkg/cerrors"
-	"projectX/pkg/model"
+	"projectX/msrvs/pkg/cerrors"
+	"projectX/msrvs/pkg/model"
 )
 
 func InitWatcher(srv *service.IService) IWatcher {

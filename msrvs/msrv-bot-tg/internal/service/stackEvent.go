@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log/slog"
-	"projectX/pkg/model"
+	"projectX/msrvs/pkg/model"
 )
 
 func (s *service) SetEvent(ctx context.Context, req []byte) {

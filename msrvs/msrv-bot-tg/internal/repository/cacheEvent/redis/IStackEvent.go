@@ -3,8 +3,8 @@ package redis
 import (
 	"context"
 	"log/slog"
-	"projectX/pkg/cerrors"
-	"projectX/pkg/model"
+	"projectX/msrvs/pkg/cerrors"
+	"projectX/msrvs/pkg/model"
 )
 
 func (r *RedisDB) Set(ctx context.Context, msg model.Message) {
@@ -27,4 +27,12 @@ func (r *RedisDB) Get() (model.Message, error) {
 	}
 
 	return user, nil
+}
+
+func (r *RedisDB) Ping(ctx context.Context) error {
+	return r.db.Ping(ctx).Err()
+}
+
+func (r *RedisDB) Close() error {
+	return r.db.Close()
 }

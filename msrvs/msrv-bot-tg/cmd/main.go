@@ -7,9 +7,11 @@ import (
 	"projectX/msrvs/msrv-bot-tg/config"
 	"projectX/msrvs/msrv-bot-tg/internal/api/bot"
 	"projectX/msrvs/msrv-bot-tg/internal/api/broker"
+	"projectX/msrvs/msrv-bot-tg/internal/repository/cacheEvent"
+	"projectX/msrvs/msrv-bot-tg/internal/repository/cacheEvent/memorySlice"
+	"projectX/msrvs/msrv-bot-tg/internal/repository/cacheEvent/redis"
+	stack2 "projectX/msrvs/msrv-bot-tg/internal/repository/cacheEvent/stack"
 	"projectX/msrvs/msrv-bot-tg/internal/repository/postgres"
-	"projectX/msrvs/msrv-bot-tg/internal/repository/redis"
-	stack2 "projectX/msrvs/msrv-bot-tg/internal/repository/stack"
 	"projectX/msrvs/msrv-bot-tg/internal/service"
 	"syscall"
 )
@@ -22,12 +24,12 @@ func main() {
 
 	rep := postgres.InitRepository(cnf)
 
-	var stack stack2.IStackEvent
-	if cnf.Redis.Dsn != "" {
+	var stack cacheEvent.IStackEvent
+	if cnf.Redis.Work {
 		stack = redis.InitRedis(cnf.Redis)
-
+		defer stack.Close()
 	} else {
-		stack = stack2.InitCache()
+		stack = memorySlice.InitCache()
 	}
 	srv := service.InitService(cnf, stack, rep)
 	br := broker.InitBroker(cnf.Broker.Host, srv)

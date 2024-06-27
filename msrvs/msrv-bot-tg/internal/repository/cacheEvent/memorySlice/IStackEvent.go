@@ -1,19 +1,15 @@
-package stack
+package memorySlice
 
 import (
 	"context"
 	"log/slog"
-	"projectX/pkg/cerrors"
-	"projectX/pkg/model"
+	"projectX/msrvs/msrv-bot-tg/internal/repository/cacheEvent"
+	"projectX/msrvs/pkg/cerrors"
+	"projectX/msrvs/pkg/model"
 	"sync"
 )
 
-type IStackEvent interface {
-	Set(ctx context.Context, msg model.Message)
-	Get() (msg model.Message, err error)
-}
-
-func InitCache() IStackEvent {
+func InitCache() cacheEvent.IStackEvent {
 	slog.Info("init memoryCache")
 	return &Cache{memory: make([]model.Message, 0)}
 }
@@ -42,4 +38,12 @@ func (m *Cache) Get() (model.Message, error) {
 	m.memory = m.memory[:len(m.memory)-1]
 
 	return msg, nil
+}
+
+func (m *Cache) Close() error {
+	return nil
+}
+
+func (m *Cache) Ping(ctx context.Context) error {
+	return nil
 }

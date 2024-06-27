@@ -4,10 +4,10 @@ import (
 	"github.com/redis/go-redis/v9"
 	"log/slog"
 	"projectX/msrvs/msrv-bot-tg/config"
-	"projectX/msrvs/msrv-bot-tg/internal/repository/stack"
+	"projectX/msrvs/msrv-bot-tg/internal/repository/cacheEvent"
 )
 
-func InitRedis(cnf config.Redis) stack.IStackEvent {
+func InitRedis(cnf config.Redis) cacheEvent.IStackEvent {
 	opt, err := redis.ParseURL(cnf.Dsn)
 	if err != nil {
 		panic(err)

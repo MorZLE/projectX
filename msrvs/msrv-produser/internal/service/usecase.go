@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"projectX/msrvs/msrv-produser/internal/broker"
 	"projectX/msrvs/msrv-produser/internal/repository"
-	"projectX/pkg/cerrors"
-	"projectX/pkg/model"
+	"projectX/msrvs/pkg/cerrors"
+	model2 "projectX/msrvs/pkg/model"
 )
 
 type IService interface {
-	Set(ctx *context.Context, req *model.UserReq) error
+	Set(ctx *context.Context, req *model2.UserReq) error
 	Get()
 }
 
@@ -26,7 +26,7 @@ type Service struct {
 	br broker.IBroker
 }
 
-func (h *Service) Set(ctx *context.Context, req *model.UserReq) error {
+func (h *Service) Set(ctx *context.Context, req *model2.UserReq) error {
 	if req.Username == "" {
 		return cerrors.ErrUserNil
 	}
@@ -34,7 +34,7 @@ func (h *Service) Set(ctx *context.Context, req *model.UserReq) error {
 		return cerrors.ErrBodyNil
 	}
 
-	var msg model.Message
+	var msg model2.Message
 	msg.Topic = "user"
 	msg.Body = req.Body
 	msg.Group = req.Username
